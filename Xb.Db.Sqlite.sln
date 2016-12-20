@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xb.Db.Sqlite", "Xb.Db.Sqlite\Xb.Db.Sqlite.csproj", "{C8D9BD9B-6156-4968-A5B9-16CDC8C8C2F3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xb.Db.Sqlite.FW4.5.1", "Xb.Db.Sqlite.FW4.5.1\Xb.Db.Sqlite.FW4.5.1.csproj", "{C8D9BD9B-6156-4968-A5B9-16CDC8C8C2F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestXb.Db.Sqlite", "TestXb.Db.Sqlite\TestXb.Db.Sqlite.csproj", "{FAC4BFFA-D8E6-4398-9C02-3F95030C747D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xb.Db.Sqlite.STD1.3", "Xb.Db.Sqlite.STD1.3\Xb.Db.Sqlite.STD1.3.csproj", "{690A6175-89CF-4983-84C4-4B77887C7175}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{C8D9BD9B-6156-4968-A5B9-16CDC8C8C2F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8D9BD9B-6156-4968-A5B9-16CDC8C8C2F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8D9BD9B-6156-4968-A5B9-16CDC8C8C2F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAC4BFFA-D8E6-4398-9C02-3F95030C747D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAC4BFFA-D8E6-4398-9C02-3F95030C747D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAC4BFFA-D8E6-4398-9C02-3F95030C747D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAC4BFFA-D8E6-4398-9C02-3F95030C747D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{690A6175-89CF-4983-84C4-4B77887C7175}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{690A6175-89CF-4983-84C4-4B77887C7175}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{690A6175-89CF-4983-84C4-4B77887C7175}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{690A6175-89CF-4983-84C4-4B77887C7175}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

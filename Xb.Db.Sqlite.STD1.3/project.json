@@ -1,0 +1,14 @@
+﻿{
+  "supports": {},
+  "dependencies": {
+    "Microsoft.Data.SQLite": "1.1.0",
+    "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
+    "NETStandard.Library": "1.6.0",
+    "System.Data.Common": "4.1.0",
+    "Xb.Core": "1.0.6",
+    "Xb.Db": "1.0.1"
+  },
+  "frameworks": {
+    "netstandard1.3": {}
+  }
+}

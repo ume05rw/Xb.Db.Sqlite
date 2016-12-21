@@ -24,26 +24,47 @@ namespace Xb.Db
         /// Database-file name
         /// DBファイル名
         /// </summary>
-        public string FileName => this.Name;
+        public string FileName => this.Address;
 
         /// <summary>
+        /// Encoding(hide property)
+        /// </summary>
+        private new Encoding Encoding { get; set; }
+
+        /// <summary>
+        /// Constructor
         /// コンストラクタ
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="password"></param>
-        /// <param name="isBuildModels"></param>
         /// <param name="additionalString"></param>
+        /// <param name="isBuildModels"></param>
         /// <remarks></remarks>
         public Sqlite(string fileName
                     , string password = null
-                    , bool isBuildModels = true
-                    , string additionalString = "")
-            : base(fileName
+                    , string additionalString = ""
+                    , bool isBuildModels = true)
+            : base(System.IO.Path.GetFileName(fileName)
                  , ""
                  , password ?? ""
-                 , ""
+                 , fileName
                  , additionalString
                  , isBuildModels)
+        {
+            this.Init();
+        }
+
+        /// <summary>
+        /// Constructor
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="isBuildModels"></param>
+        public Sqlite(SqliteConnection connection
+                    , bool isBuildModels = true)
+            : base (connection
+                  , ""
+                  , isBuildModels)
         {
             this.Init();
         }
@@ -63,13 +84,20 @@ namespace Xb.Db
         /// <remarks></remarks>
         protected override void Open()
         {
+            if(string.IsNullOrEmpty(this.Address))
+                throw new InvalidOperationException("Xb.Db.Sqlite.Open: Db-file path not set.");
+            
             //build connection string
             var connectionString 
-                = string.Format("Version=3;Data Source={0};New=False;Compress=True;{1}",
-                                this.Name,
+                = string.Format("Data Source={0}{1}",
+                                this.Address,
                                 string.IsNullOrEmpty(this.AdditionalConnectionString)
                                     ? ""
                                     : "; " + this.AdditionalConnectionString);
+
+            //allowed options: DataSource, Mode, Cache
+            //https://github.com/aspnet/Microsoft.Data.Sqlite/wiki/Connection-Strings
+
             try
             {
                 //connect DB
@@ -124,29 +152,54 @@ namespace Xb.Db
                     throw new Exception("Xb.Db.Sqlite.GetStructure: カラム情報の取得に失敗しました。");
                 }
 
-                for (int i = 1; i <= dt2.Rows.Count - 1; i++)
+                foreach (ResultRow rrow in dt2.Rows)
                 {
                     var row = new Xb.Db.DbBase.Structure();
-                    var typeString = dt2.Rows[i]["type"].ToString().ToLower();
+                    var typeString = rrow["type"].ToString().ToLower();
                     var isNumber = false;
                     if (typeString.IndexOf("integer", StringComparison.Ordinal) != -1)
                     {
                         typeString = "integer";
                         isNumber = true;
+
+                        //数値型のとき
+                        row.CHAR_LENGTH = -1;
+                        row.NUM_PREC = 12;
+                        row.NUM_SCALE = 0;
                     }
                     else if (typeString.IndexOf("real", StringComparison.Ordinal) != -1)
                     {
                         typeString = "real";
                         isNumber = true;
+
+                        //数値型のとき
+                        row.CHAR_LENGTH = -1;
+                        row.NUM_PREC = 12;
+                        row.NUM_SCALE = 6;
                     }
-                    else if (typeString.IndexOf("varchar", StringComparison.Ordinal) != -1)
+                    else if (typeString.IndexOf("numeric", StringComparison.Ordinal) != -1)
                     {
-                        typeString = "varchar";
+                        typeString = "numeric";
+                        isNumber = true;
+
+                        //数値型のとき
+                        row.CHAR_LENGTH = -1;
+                        row.NUM_PREC = 12;
+                        row.NUM_SCALE = 6;
+                    }
+                    else if (typeString.IndexOf("text", StringComparison.Ordinal) != -1)
+                    {
+                        typeString = "text";
                     }
                     else if (typeString.IndexOf("blob", StringComparison.Ordinal) != -1)
                     {
                         typeString = "blob";
                     }
+                    else if (typeString.IndexOf("varchar", StringComparison.Ordinal) != -1)
+                    {
+                        typeString = "varchar";
+                    }
+
                     else if (typeString.IndexOf("datetime", StringComparison.Ordinal) != -1)
                     {
                         typeString = "datetime";
@@ -165,23 +218,16 @@ namespace Xb.Db
                     }
 
                     row.TABLE_NAME = tableName;
-                    row.COLUMN_INDEX = (long)dt2.Rows[i]["cid"];
-                    row.COLUMN_NAME  = dt2.Rows[i]["name"].ToString();
+                    row.COLUMN_INDEX = (long)rrow["cid"];
+                    row.COLUMN_NAME  = rrow["name"].ToString();
                     row.TYPE = typeString;
-                    row.IS_PRIMARY_KEY = (long)dt2.Rows[i]["pk"];
-                    row.IS_NULLABLE = Convert.ToInt32(dt2.Rows[i]["notnull"]) == 0
-                                             ? 1
-                                             : 0;
+                    row.IS_PRIMARY_KEY = (long)(((long)rrow["pk"] > 0) ? 1 : 0);
+                    row.IS_NULLABLE = Convert.ToInt32(rrow["notnull"]) == 0
+                        ? 1
+                        : 0;
                     row.COMMENT = "";
 
-                    if (isNumber)
-                    {
-                        //数値型のとき
-                        row.CHAR_LENGTH = -1;
-                        row.NUM_PREC = 12;
-                        row.NUM_SCALE = 6;
-                    }
-                    else
+                    if (!isNumber)
                     {
                         //文字型、その他のとき
                         row.CHAR_LENGTH = 65335;
@@ -212,7 +258,11 @@ namespace Xb.Db
 
             var param = new SqliteParameter();
             param.Direction = ParameterDirection.Input;
-            param.ParameterName = name ?? "";
+
+            //param.ParameterName = name ?? "";
+            if (!string.IsNullOrEmpty(name))
+                param.ParameterName = name;
+
             param.Value = value;
             param.SqliteType = type;
             //param.DbType = type;
@@ -237,7 +287,9 @@ namespace Xb.Db
             if (parameters != null
                 && parameters.Length > 0)
             {
-                result.Parameters.AddRange(parameters);
+                //result.Parameters.AddRange(parameters);
+                foreach (var parameter in parameters)
+                    result.Parameters.Add((SqliteParameter)parameter);
             }
 
             return result;
@@ -245,6 +297,7 @@ namespace Xb.Db
 
 
         /// <summary>
+        /// Get Database backup file
         /// データベースのバックアップファイルを取得する。
         /// </summary>
         /// <param name="fileName"></param>

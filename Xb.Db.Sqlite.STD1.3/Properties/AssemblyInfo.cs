@@ -7,8 +7,8 @@ using System.Runtime.InteropServices;
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
 [assembly: AssemblyTitle("Xb.Db.Sqlite")]
-[assembly: AssemblyDescription("Ready to Xamarin & .NET Core, SQLite Access Library.")]
-[assembly: AssemblyConfiguration("Ready to Xamarin & .NET Core, SQLite Access Library.")]
+[assembly: AssemblyDescription("Ready to Xamarin & .NET Core, Database Library for SQLite. SQL execution and Simple implementation of Table - Model.")]
+[assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Do-Be's")]
 [assembly: AssemblyProduct("Xb.Db.Sqlite")]
 [assembly: AssemblyCopyright("Copyright Do-Be's(C)  2016")]
@@ -26,5 +26,5 @@ using System.Runtime.InteropServices;
 // すべての値を指定するか、下のように '*' を使ってビルドおよびリビジョン番号を 
 // 既定値にすることができます:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.1.0")]
-[assembly: AssemblyFileVersion("1.0.1.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

@@ -36,17 +36,15 @@ namespace Xb.Db
         /// コンストラクタ
         /// </summary>
         /// <param name="fileName"></param>
-        /// <param name="password"></param>
         /// <param name="additionalString"></param>
         /// <param name="isBuildModels"></param>
         /// <remarks></remarks>
         public Sqlite(string fileName
-                    , string password = null
                     , string additionalString = ""
                     , bool isBuildModels = true)
             : base(System.IO.Path.GetFileName(fileName)
                  , ""
-                 , password ?? ""
+                 , ""
                  , fileName
                  , additionalString
                  , isBuildModels)

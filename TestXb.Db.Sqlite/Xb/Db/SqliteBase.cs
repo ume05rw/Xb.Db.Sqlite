@@ -74,7 +74,6 @@ namespace TestXb.Db
             try
             {
                 this._dbDirect = new Xb.Db.Sqlite(SqliteBase.FileName
-                                                , null
                                                 , ""
                                                 , isBuildModel);
 

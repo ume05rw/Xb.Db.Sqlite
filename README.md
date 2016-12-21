@@ -31,7 +31,6 @@ Namespace and Methods are...
          +- .DbBase(Instance)
          |    |
          |    +- .Constructor(string fileName,
-         |    |               string password = null,
          |    |               string additionalString = "",
          |    |               bool isBuildModels = true)
          |    |   Create instance

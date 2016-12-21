@@ -28,7 +28,7 @@ Namespace and Methods are...
 
     ・Xb.Db
          |
-         +- .DbBase(Instance)
+         +- .Sqlite(Instance)
          |    |
          |    +- .Constructor(string fileName,
          |    |               string additionalString = "",

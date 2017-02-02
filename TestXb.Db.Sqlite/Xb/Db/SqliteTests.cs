@@ -702,5 +702,58 @@ namespace TestXb
 
             this.Out("TransactionTest End.");
         }
+
+        [TestMethod()]
+        public void DataTypeTest()
+        {
+            var dbName = "dbtesttable.sqlite3";
+
+            try
+            { System.IO.File.Delete(dbName); }
+            catch (Exception) { }
+
+            var db = new Xb.Db.Sqlite(dbName
+                                    , ""
+                                    , true);
+
+
+            //カラムに桁数を指定する。
+            var sql = " CREATE TABLE test4 ( "
+                + "     COL_STR TEXT(10) NOT NULL, "
+                + "     COL_DEC REAL(1), "
+                + "     COL_INT INTEGER(1) "
+                + " ) ";
+            db.Execute(sql);
+            db.Dispose();
+            db = new Xb.Db.Sqlite(dbName
+                                    , ""
+                                    , true);
+
+
+            var mdlTest4 = db.Models["test4"];
+            var row = mdlTest4.NewRow();
+            row["COL_STR"] = "1234567890";
+            row["COL_DEC"] = 1;
+            row["COL_INT"] = 2;
+            var res = mdlTest4.Insert(row);
+            Assert.AreEqual(0, res.Length);
+
+            //桁数を超過した値でも、INSERT可能。
+            row = mdlTest4.NewRow();
+            row["COL_STR"] = "12345678901";
+            row["COL_DEC"] = 1024;
+            row["COL_INT"] = 1024;
+            res = mdlTest4.Insert(row);
+            Assert.AreEqual(0, res.Length);
+
+            var rt = mdlTest4.FindAll();
+            Assert.AreEqual(2, rt.RowCount);
+
+            db.Dispose();
+            try
+            { System.IO.File.Delete(dbName); }
+            catch (Exception) { }
+
+        }
     }
 }
